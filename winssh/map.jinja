@@ -1,0 +1,21 @@
+{% set winssh = salt['grains.filter_by']({
+    'Windows': {
+        'installer': 'setupssh-7.5p1-1.exe',
+        'url': 'https://www.mls-software.com/files/setupssh-7.5p1-1.exe',
+        'hash': '254bb11ff2e7cf9010fc75236da9195c67ccda234d0305fac7518b32bf981fa8',
+        'port': '22',
+        'domain': '0',
+        'keysize': '4096',
+        },
+}, grain='os', default='Windows', merge=salt['pillar.get']('winssh')) %}
+
+{% set arch = salt['grains.filter_by']({
+    'x86': {
+        'arch': '1',
+        },
+    'AMD64':{
+        'arch': '0',
+    },
+}, grain='cpuarch', merge=salt['pillar.get']('winssh')) %}
+
+{% do winssh.update(arch) %}
